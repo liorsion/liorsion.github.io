@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ערכת כלי סיוע לחרדה</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .tool-duration {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .tool-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .tool-description {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .info-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .info-section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        .info-section h3 {
+            color: #333;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .info-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .info-section ul {
+            margin: 1rem 0;
+            padding-right: 2rem;
+        }
+
+        .info-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .resources-list a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .resources-list a:hover {
+            text-decoration: underline;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            direction: rtl;
+        }
+
+        .close {
+            color: #aaa;
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            left: 20px;
+        }
+
+        .close:hover {
+            color: #667eea;
+        }
+
+        .exercise-content {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .breath-circle {
+            width: 200px;
+            height: 200px;
+            border: 4px solid #667eea;
+            border-radius: 50%;
+            margin: 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #667eea;
+            transition: transform 4s ease-in-out;
+        }
+
+        .breath-circle.inhale {
+            transform: scale(1.3);
+        }
+
+        .breath-circle.exhale {
+            transform: scale(0.7);
+        }
+
+        .exercise-controls {
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 0.5rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #5a67d8;
+        }
+
+        .grounding-exercise {
+            text-align: center;
+        }
+
+        .grounding-step {
+            background: #f8f9ff;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            border-right: 4px solid #667eea;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 1rem;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .tool-card {
+                padding: 1.5rem;
+            }
+            
+            .modal-content {
+                width: 95%;
+                margin: 2% auto;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ערכת כלי סיוע לחרדה</h1>
+            <p class="subtitle">כלים חינמיים לעזרה כשאתם מרגישים חרדים. התרגילים האלה פשוטים למעקב ולא דורשים ציוד מיוחד - השתמשו בהם כשהמוח שלכם מרגיש עמוס מדי או כשאתם זקוקים לרגע של רוגע.</p>
+        </header>
+
+        <div class="tools-grid">
+            <div class="tool-card" onclick="openModal('breathing')">
+                <div class="tool-duration">2-3 דקות</div>
+                <h3 class="tool-title">נשימה של דקתיים</h3>
+                <p class="tool-description">תרגיל נשימה פשוט שמרגיע את מערכת העצבים ומפחית חרדה תוך דקות בודדות</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('grounding')">
+                <div class="tool-duration">3-5 דקות</div>
+                <h3 class="tool-title">הארקה 5-4-3-2-1</h3>
+                <p class="tool-description">טכניקה חושית שמוציאה אתכם ממחשבות חרדות על ידי התמקדות במה שמסביבכם כעת</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('guided-breathing')">
+                <div class="tool-duration">5-10 דקות</div>
+                <h3 class="tool-title">נשימה מודרכת</h3>
+                <p class="tool-description">דפוסי נשימה צעד אחר צעד להאטת קצב הלב והפגת מתח</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('muscle-relaxation')">
+                <div class="tool-duration">8-12 דקות</div>
+                <h3 class="tool-title">רגיעת שרירים מתקדמת</h3>
+                <p class="tool-description">שחרור מתח פיזי על ידי כיווץ והרפיה שיטתית של קבוצות שרירים בכל הגוף</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('visualization')">
+                <div class="tool-duration">10-12 דקות</div>
+                <h3 class="tool-title">דמיון מרגיע</h3>
+                <p class="tool-description">דמיון מודרך שמעביר אתכם לסביבות מרגיעות כדי להפחית לחץ ודאגות</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('thought-labeling')">
+                <div class="tool-duration">5-15 דקות</div>
+                <h3 class="tool-title">תיוג מחשבות</h3>
+                <p class="tool-description">טכניקת מיינדפולנס שעוזרת לזהות מחשבות חרדות כאירועים נפשיים זמניים, לא כעובדות</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('stress-bubbles')">
+                <div class="tool-duration">2-5 דקות</div>
+                <h3 class="tool-title">בועות הפגת לחץ</h3>
+                <p class="tool-description">פעילות אינטראקטיבית של פיצוץ בועות שמעבירה אנרגיה חרדה לתנועה חוזרת ומשחקית</p>
+            </div>
+
+            <div class="tool-card" onclick="openModal('sound-therapy')">
+                <div class="tool-duration">5-30 דקות</div>
+                <h3 class="tool-title">טיפול בצלילים</h3>
+                <p class="tool-description">תדרים מרפאים שמקדמים רגיעה ובהירות נפשית</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>הבנת החרדה</h2>
+            
+            <h3>מה קורה במהלך חרדה</h3>
+            <p>הגוף שלכם מפעיל את תגובת "לחימה או בריחה", מגביר קצב לב, מזרז נשימה ומשחרר הורמוני לחץ כמו אדרנלין. לעיתים קרובות זה מופעל שלא לצורך במהלך מצבים יומיומיים, ומשאיר אתכם בתחושה של מתח.</p>
+            
+            <h3>איך הטכניקות האלה עוזרות</h3>
+            <p>הטכניקות המבוססות על מחקר הללו מפעילות את מערכת העצבים הפאראסימפתטית שלכם, שמנטרלת באופן טבעי את תגובת הלחץ. תרגול קבוע יכול להפחית הן את התדירות והן את העוצמה של הרגשות החרדים.</p>
+            
+            <h3>טיפים לתוצאות מיטביות</h3>
+            <ul>
+                <li>מצאו מקום שקט ונוח שבו לא יפריעו לכם</li>
+                <li>התחילו עם טכניקות קצרות יותר (2-5 דקות) אם אתם מרגישים חרדים מאוד</li>
+                <li>תרגלו באופן קבוע, גם כשאתם לא חרדים, כדי לפתח את הכישורים שלכם</li>
+                <li>היו סבלניים עם עצמכם - הטכניקות האלה נעשות קלות יותר עם התרגול</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h2>משאבים נוספים</h2>
+            
+            <h3>מתי לפנות לעזרה מקצועית</h3>
+            <p>אם חרדה משפיעה באופן משמעותי על החיים היומיומיים, העבודה או יחסיכם, שקלו לפנות לאיש מקצוע בבריאות הנפש.</p>
+            <ul>
+                <li>התקפי חרדה תכופים או חמורים</li>
+                <li>אתם נמנעים מפעילויות חשובות</li>
+                <li>תסמינים פיזיים נמשכים</li>
+                <li>שינה או תיאבון מושפעים באופן משמעותי</li>
+            </ul>
+            
+            <h3>ארגוני בריאות נפש</h3>
+            <p>ארגונים מובילים המספקים מידע ומשאבים מבוססי מחקר לחרדה ודיכאון:</p>
+            <div class="resources-list">
+                <p><a href="https://adaa.org" target="_blank">האגודה האמריקאית לחרדה ודיכאון (ADAA)</a><br>
+                ארגון ללא מטרות רווח הבינלאומי המוקדש למניעה, טיפול וריפוי של חרדה, דיכאון והפרעות קשורות.</p>
+                
+                <p><a href="https://www.nimh.nih.gov/health/topics/anxiety-disorders" target="_blank">המכון הלאומי לבריאות הנפש (NIMH)</a><br>
+                הסוכנות הפדרלית המובילה למחקר בריאות נפש המספקת מידע מהימן ומבוסס מחקר על הפרעות חרדה וטיפולים.</p>
+                
+                <p><a href="https://www.mhanational.org/" target="_blank">בריאות נפש אמריקה (MHA)</a><br>
+                ארגון ללא מטרות רווח קהילתי המציע כלי סקר חינמיים, משאבים מעשיים והדרכה לשיחות בריאות נפש.</p>
+                
+                <p><a href="https://www.apa.org/topics/anxiety" target="_blank">האגודה הפסיכולוגית האמריקאית (APA)</a><br>
+                הארגון המדעי המוביל המספק מידע מעמיק על טיפול בחרדה, אפשרויות טיפול ותובנות מומחים.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals for each exercise -->
+    <div id="breathingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('breathing')">&times;</span>
+            <h2>נשימה של דקתיים</h2>
+            <div class="exercise-content">
+                <div class="breath-circle" id="breathCircle">נשמו</div>
+                <div class="exercise-controls">
+                    <button class="btn" onclick="startBreathingExercise()">התחל תרגיל</button>
+                    <button class="btn" onclick="stopBreathingExercise()">עצור</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="groundingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('grounding')">&times;</span>
+            <h2>הארקה 5-4-3-2-1</h2>
+            <div class="grounding-exercise">
+                <p>תרגיל זה עוזר לכם להתחבר לרגע הנוכחי על ידי שימוש בחושיכם:</p>
+                
+                <div class="grounding-step">
+                    <span class="step-number">5</span>
+                    <strong>5 דברים שאתם רואים</strong> - הביטו סביבכם וזהו 5 דברים שאתם יכולים לראות
+                </div>
+                
+                <div class="grounding-step">
+                    <span class="step-number">4</span>
+                    <strong>4 דברים שאתם יכולים לגעת</strong> - שימו לב ל-4 דברים שאתם יכולים להרגיש בגופכם או לגעת בהם
+                </div>
+                
+                <div class="grounding-step">
+                    <span class="step-number">3</span>
+                    <strong>3 דברים שאתם שומעים</strong> - הקשיבו ל-3 צלילים שונים סביבכם
+                </div>
+                
+                <div class="grounding-step">
+                    <span class="step-number">2</span>
+                    <strong>2 דברים שאתם מריחים</strong> - זהו 2 ריחות, או זכרו 2 ריחות אהובים
+                </div>
+                
+                <div class="grounding-step">
+                    <span class="step-number">1</span>
+                    <strong>1 דבר שאתם טועמים</strong> - שימו לב לטעם בפיכם או זכרו טעם אהוב
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="guided-breathingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('guided-breathing')">&times;</span>
+            <h2>נשימה מודרכת</h2>
+            <div class="exercise-content">
+                <p>עקבו אחר ההוראות האלה לנשימה מרגיעה:</p>
+                <ol style="text-align: right; margin: 2rem 0;">
+                    <li>שבו בנוחות עם הגב זקוף</li>
+                    <li>הניחו יד אחת על החזה ואחת על הבטן</li>
+                    <li>נשמו לאט דרך האף למשך 4 שניות</li>
+                    <li>החזיקו את הנשימה למשך 4 שניות</li>
+                    <li>נשפו לאט דרך הפה למשך 6 שניות</li>
+                    <li>חזרו על התהליך 5-10 פעמים</li>
+                </ol>
+                <p><strong>טיפ:</strong> הידא שהיד על הבטן נעה יותר מהיד על החזה</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="muscle-relaxationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('muscle-relaxation')">&times;</span>
+            <h2>רגיעת שרירים מתקדמת</h2>
+            <div class="exercise-content">
+                <p>תרגיל זה כולל מתח והרפיה של קבוצות שרירים שונות:</p>
+                <ol style="text-align: right; margin: 2rem 0;">
+                    <li><strong>כפות הרגליים:</strong> כווצו למשך 5 שניות, הרפו למשך 10</li>
+                    <li><strong>השוקיים והירכיים:</strong> כווצו למשך 5 שניות, הרפו למשך 10</li>
+                    <li><strong>הבטן:</strong> כווצו למשך 5 שניות, הרפו למשך 10</li>
+                    <li><strong>הידיים והזרועות:</strong> כווצו למשך 5 שניות, הרפו למשך 10</li>
+                    <li><strong>הכתפיים והצוואר:</strong> כווצו למשך 5 שניות, הרפו למשך 10</li>
+                    <li><strong>הפנים:</strong> כווצו למשך 5 שניות, הרפו למשך 10</li>
+                </ol>
+                <p><strong>הוראות:</strong> התמקדו בתחושת ההרפיה לאחר כל כיווץ</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="visualizationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('visualization')">&times;</span>
+            <h2>דמיון מרגיע</h2>
+            <div class="exercise-content">
+                <p>סגרו את העיניים ודמיינו מקום שקט ומרגיע:</p>
+                <div style="text-align: right; margin: 2rem 0; line-height: 2;">
+                    <p>דמיינו את עצמכם בחוף ים שקט...</p>
+                    <p>הרגישו את החול החם מתחת לרגליכם...</p>
+                    <p>שמעו את קול הגלים הנסוגים והגועשים...</p>
+                    <p>הרגישו את רוח הים הקרירה על עורכם...</p>
+                    <p>הריחו את ריח המלח והים...</p>
+                    <p>ראו את השמש זורחת על פני המים...</p>
+                    <p>הרגישו שלווה ושקט פנימי...</p>
+                </div>
+                <p><strong>טיפ:</strong> אתם יכולים לדמיין כל מקום שגורם לכם להרגיש בטוחים ושלווים</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="thought-labelingModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('thought-labeling')">&times;</span>
+            <h2>תיוג מחשבות</h2>
+            <div class="exercise-content">
+                <p>למדו לזהות ולתייג מחשבות חרדות:</p>
+                <ol style="text-align: right; margin: 2rem 0;">
+                    <li><strong>הבחינו במחשבה:</strong> "אני חושב ש..."</li>
+                    <li><strong>תייגו אותה:</strong> "זו מחשבת דאגה"</li>
+                    <li><strong>אמרו לעצמכם:</strong> "מחשבות הן לא עובדות"</li>
+                    <li><strong>חזרו לרגע הנוכחי:</strong> התמקדו בנשימה</li>
+                </ol>
+                <div style="background: #f8f9ff; padding: 1rem; border-radius: 10px; margin: 1rem 0;">
+                    <strong>דוגמאות לתיוגים:</strong>
+                    <ul style="text-align: right; margin-top: 1rem;">
+                        <li>"מחשבת דאגה"</li>
+                        <li>"מחשבת ביקורת עצמית"</li>
+                        <li>"מחשבת קטסטרופה"</li>
+                        <li>"זיכרון עבר"</li>
+                        <li>"דאגה לעתיד"</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="stress-bubblesModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('stress-bubbles')">&times;</span>
+            <h2>בועות הפגת לחץ</h2>
+            <div class="exercise-content">
+                <p>לחצו על הבועות כדי לפוצץ אותן ולהפיג מתח:</p>
+                <div id="bubblesContainer" style="height: 300px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; position: relative; overflow: hidden; margin: 1rem 0; cursor: crosshair;">
+                </div>
+                <div class="exercise-controls">
+                    <button class="btn" onclick="createBubbles()">יצירת בועות חדשות</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sound-therapyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('sound-therapy')">&times;</span>
+            <h2>טיפול בצלילים</h2>
+            <div class="exercise-content">
+                <p>בחרו צליל מרגיע לטיפול:</p>
+                <div class="exercise-controls">
+                    <button class="btn" onclick="playSound('rain')">גשם</button>
+                    <button class="btn" onclick="playSound('ocean')">אוקיינוס</button>
+                    <button class="btn" onclick="playSound('forest')">יער</button>
+                    <button class="btn" onclick="stopSound()">עצור</button>
+                </div>
+                <p style="margin-top: 2rem;"><strong>הוראות:</strong> סגרו את העיניים, התרכזו בצליל ותנו למחשבות לעבור מבלי להתרכז בהן.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let breathingInterval;
+        let isBreathing = false;
+        let currentAudio;
+
+        function openModal(type) {
+            const modal = document.getElementById(type + 'Modal');
+            modal.style.display = 'block';
+        }
+
+        function closeModal(type) {
+            const modal = document.getElementById(type + 'Modal');
+            modal.style.display = 'none';
+            
+            // Clean up any running exercises
+            if (type === 'breathing') {
+                stopBreathingExercise();
+            }
+            if (type === 'sound-therapy') {
+                stopSound();
+            }
+        }
+
+        function startBreathingExercise() {
+            if (isBreathing) return;
+            
+            isBreathing = true;
+            const circle = document.getElementById('breathCircle');
+            let phase = 'inhale';
+            
+            function breathCycle() {
+                if (!isBreathing) return;
+                
+                if (phase === 'inhale') {
+                    circle.textContent = 'שאפו';
+                    circle.className = 'breath-circle inhale';
+                    phase = 'exhale';
+                    setTimeout(breathCycle, 4000);
+                } else {
+                    circle.textContent = 'נשפו';
+                    circle.className = 'breath-circle exhale';
+                    phase = 'inhale';
+                    setTimeout(breathCycle, 6000);
+                }
+            }
+            
+            breathCycle();
+        }
+
+        function stopBreathingExercise() {
+            isBreathing = false;
+            const circle = document.getElementById('breathCircle');
+            circle.textContent = 'נשמו';
+            circle.className = 'breath-circle';
+        }
+
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            container.innerHTML = '';
+            
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.style.position = 'absolute';
+                bubble.style.width = Math.random() * 50 + 20 + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+                bubble.style.borderRadius = '50%';
+                bubble.style.left = Math.random() * 90 + '%';
+                bubble.style.top = Math.random() * 90 + '%';
+                bubble.style.cursor = 'pointer';
+                bubble.style.transition = 'all 0.3s ease';
+                
+                bubble.addEventListener('click', function() {
+                    this.style.transform = 'scale(0)';
+                    this.style.opacity = '0';
+                    setTimeout(() => {
+                        if (this.parentNode) {
+                            this.parentNode.removeChild(this);
+                        }
+                    }, 300);
+                });
+                
+                container.appendChild(bubble);
+            }
+        }
+
+        function playSound(type) {
+            stopSound();
+            
+            try {
+                // Create a simple tone using Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Different frequencies for different "sounds"
+                const frequencies = {
+                    rain: 200,
+                    ocean: 100,
+                    forest: 300
+                };
+                
+                oscillator.frequency.setValueAtTime(frequencies[type] || 200, audioContext.currentTime);
+                oscillator.type = 'sine';
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                
+                oscillator.start();
+                
+                // Store reference to stop later
+                currentAudio = { oscillator, audioContext };
+            } catch (error) {
+                console.log('Audio not supported in this browser');
+            }
+        }
+
+        function stopSound() {
+            if (currentAudio) {
+                try {
+                    currentAudio.oscillator.stop();
+                    currentAudio.audioContext.close();
+                } catch (error) {
+                    console.log('Error stopping audio');
+                }
+                currentAudio = null;
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                stopBreathingExercise();
+                stopSound();
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const openModal = document.querySelector('.modal[style*="block"]');
+                if (openModal) {
+                    openModal.style.display = 'none';
+                    stopBreathingExercise();
+                    stopSound();
+                }
+            }
+        });
+
+        // Initialize when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Hebrew Anxiety Aid Tools loaded successfully');
+        });
+    </script>
+</body>
+</html>
